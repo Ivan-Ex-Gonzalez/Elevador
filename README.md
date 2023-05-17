@@ -12,17 +12,18 @@
 
 sistema que puede recibir ordenes de subir, bajar o pausar desde diferentes pisos y muestre el estado actual del montacargas en el display 7 segmentos.
 
-##Entradas digitales
+## Entradas digitales
 
 ![image](https://github.com/Ivan-Ex-Gonzalez/Elevador/assets/109388659/178cac20-5e05-4823-b012-0b8c083a8a40)
 
 -3 Pulsadores configurados en PULLUP
 
-##Salidas digitales
+## Salidas digitales
 
 ![image](https://github.com/Ivan-Ex-Gonzalez/Elevador/assets/109388659/1e419046-4bca-4800-90ae-3e6cdcf1bf60)
 
 -2 Leds con una resistencia de 220 ohms en cada uno.
+
 -1 Display de 7 segmentos con una resistencia de 300 en cada segmento
 
 ## funcion principal
