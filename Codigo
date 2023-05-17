@@ -1,0 +1,125 @@
+// C++ code
+//Ivan Gonzalez
+//1J
+//
+#define A 11
+#define B 12
+#define C 6
+#define D 7
+#define E 8
+#define F 10
+#define G 9
+#define led_v 5
+#define led_r 4
+#define subir A0
+#define pausar A1
+#define bajar A5
+int listanumeros[][8] = {
+    					 {A, B, C, D, E, F, -1},
+                         {B, C, -1},
+                         {A, B, G, D, E, -1},
+                         {A, B, C, D, G, -1},
+  						 {B, F, C, G, -1},
+  						 {A, F, C, D, G, -1},
+  						 {A, F, C, D, E, G, -1},
+                         {A, B, C, -1},
+                         {A, B, C, D, E, F, G, -1},
+                         {A, B, G, D, F, C, -1}};
+int piso = 0;
+int antirrebote = 0;
+
+void setup()
+{
+  pinMode(A, OUTPUT);
+  pinMode(B, OUTPUT);
+  pinMode(C, OUTPUT);
+  pinMode(D, OUTPUT);
+  pinMode(E, OUTPUT);
+  pinMode(F, OUTPUT);
+  pinMode(G, OUTPUT);
+  pinMode(led_v, OUTPUT);
+  pinMode(led_r, OUTPUT);
+  pinMode(subir, INPUT_PULLUP);
+  pinMode(pausar, INPUT_PULLUP);
+  pinMode(bajar, INPUT_PULLUP);
+  Controlador_de_7_segmentos(listanumeros[piso], HIGH);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int bajo = digitalRead(bajar);
+  int subo = digitalRead(subir);
+  int pauso = digitalRead(pausar);
+  ascensor(subo, bajo, pauso);
+}
+	
+void ascensor(int subir, int bajar, int pausar){
+    if (subir == LOW && piso < 9) {
+      Bajar_o_subir(1);
+    }
+  	if (bajar == LOW && piso > 0) {
+      Bajar_o_subir(0);
+    }
+  	if (pausar == LOW){
+      	antirrebote = 1;
+    }
+    if (pausar == HIGH && antirrebote == 1){
+        antirrebote = 0;
+    	pausa();
+    }
+}
+
+void espera(){
+  for (int i = 0; i <= 30; i++){
+    int pauso = digitalRead(pausar);
+    delay(100);
+    if (pauso == LOW){
+      	antirrebote = 1;
+    }
+    if (pauso == HIGH && antirrebote == 1){
+        antirrebote = 0;
+        digitalWrite(led_v, LOW);
+    	pausa();
+        digitalWrite(led_v, HIGH);
+    }
+  }
+}
+
+void pausa() {
+  int bandera = 1;
+  digitalWrite(led_r, HIGH);
+  while (bandera == 1) {
+    int pauso = digitalRead(pausar);
+    if (pauso == LOW) {
+      antirrebote = 1;
+    }
+    if (pauso == HIGH && antirrebote == 1){
+      antirrebote = 0;
+      bandera = 0;
+      digitalWrite(led_r, LOW);
+    }
+  }
+}
+
+void Controlador_de_7_segmentos(int lista[],int estado){
+  for (int i = 0; lista[i] != -1; i++){
+  	int letra = lista[i];
+    digitalWrite(letra, estado);
+  }
+}
+
+void Bajar_o_subir(int mover){
+	digitalWrite(led_v, HIGH);
+    espera();
+    Controlador_de_7_segmentos(listanumeros[piso], LOW);
+  	if (mover == 1){
+  		piso++;
+  	}
+  	else{
+  		piso--;
+  	}
+    digitalWrite(led_v, LOW);
+    Serial.println(piso);
+    Controlador_de_7_segmentos(listanumeros[piso], HIGH);
+}
