@@ -26,7 +26,7 @@ sistema que puede recibir ordenes de subir, bajar o pausar desde diferentes piso
 
 -1 Display de 7 segmentos con una resistencia de 300 en cada segmento
 
-## funcion principal
+## Codigo
 -Todas las definiciones al principio del codigo:
 ```c++
 #define A 11
