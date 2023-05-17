@@ -41,6 +41,23 @@ sistema que puede recibir ordenes de subir, bajar o pausar desde diferentes piso
 #define pausar A1
 #define bajar A5
 ```
+-La variable listanumeros[] es una matriz de 8 filas que contiena los segmetos que le corresponden a cada numero del 0 al 9 y es utilizada para 
+darle a la funcion Controlador_de_7_segmentos() la lista que del piso correspondiente para subir o bajar de piso.
+
+```c++
+int listanumeros[][8] = {
+    			 {A, B, C, D, E, F, -1},
+                         {B, C, -1},
+                         {A, B, G, D, E, -1},
+                         {A, B, C, D, G, -1},
+  			 {B, F, C, G, -1},
+  			 {A, F, C, D, G, -1},
+  			 {A, F, C, D, E, G, -1},
+                         {A, B, C, -1},
+                         {A, B, C, D, E, F, G, -1},
+                         {A, B, G, D, F, C, -1}};
+```
+
 
 -La funcion ascensor() recibe por parametro los digitalread bajo, subo y pauso. Esta funcion se repite de forma indefinada y dependiendo de que pulsador de presione
 llamara a la funcion Bajar_o_subir() o pausa().
@@ -92,8 +109,42 @@ void Controlador_de_7_segmentos(int lista[],int estado){
   }
 }
 ```
-
-
+-La funcion espera() se encarga de ejecutar un dilay de 100 30 veces y si en mitad de eso se preciona el pulsador pausar, llama a la funcion pausa().
+```c++
+void espera(){
+  for (int i = 0; i <= 30; i++){
+    int pauso = digitalRead(pausar);
+    delay(100);
+    if (pauso == LOW){
+      	antirrebote = 1;
+    }
+    if (pauso == HIGH && antirrebote == 1){
+        antirrebote = 0;
+        digitalWrite(led_v, LOW);
+    	pausa();
+        digitalWrite(led_v, HIGH);
+    }
+  }
+}
+```
+-La funcion pausa() se encarga de mantener actuvo un bucle indefinido hasta que se presione el pulsador pausar.
+```c++
+void pausa() {
+  int bandera = 1;
+  digitalWrite(led_r, HIGH);
+  while (bandera == 1) {
+    int pauso = digitalRead(pausar);
+    if (pauso == LOW) {
+      antirrebote = 1;
+    }
+    if (pauso == HIGH && antirrebote == 1){
+      antirrebote = 0;
+      bandera = 0;
+      digitalWrite(led_r, LOW);
+    }
+  }
+}
+```
 
 ## :eight_pointed_black_star:Link al proyecto
 
